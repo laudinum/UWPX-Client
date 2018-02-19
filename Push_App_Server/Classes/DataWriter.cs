@@ -16,6 +16,11 @@ namespace Push_App_Server.Classes
         private readonly PushConnection PUSH_CONNECTION;
         private XMPPClient client;
 
+        /// <summary>
+        /// Whether the last connectAndSendAsync() was successful or not.
+        /// </summary>
+        public bool success { get; }
+
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
@@ -52,6 +57,11 @@ namespace Push_App_Server.Classes
         private void setChannelTokenUrl(string url)
         {
             Settings.setSetting(SettingsConsts.PUSH_CHANNEL_TOKEN_URL + client.getXMPPAccount().getIdAndDomain(), url);
+        }
+
+        public string getCertificateInformation()
+        {
+            return PUSH_CONNECTION.getCertificateInformation();
         }
 
         #endregion
@@ -91,7 +101,6 @@ namespace Push_App_Server.Classes
                     {
                         Logger.Info("Connecting to the push server (" + Consts.PUSH_SERVER_ADDRESS + ")...");
                         await PUSH_CONNECTION.connectAsync();
-                        PUSH_CONNECTION.getCertificateInformation();
                         Logger.Info("Connected to the push server (" + Consts.PUSH_SERVER_ADDRESS + ").");
                         await PUSH_CONNECTION.sendAsync(getMessage(channel.Uri));
                         return PUSH_CONNECTION.readNextString();

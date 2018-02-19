@@ -5,18 +5,56 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:UWP_XMPP_Client.Controls"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <controls:SettingsHeaderControl Grid.Row="0" Icon="&#xE71D;" Text="Background Tasks"/>
-            <StackPanel Margin="10, 0, 10, 0" Grid.Row="1">
-                <ToggleSwitch x:Name="disablePush_tgls" Header="Disable push:" Margin="0, 10, 0, 0" Toggled="disablePush_tgls_Toggled"/>
-            </StackPanel>
-        </Grid>
-    </ScrollViewer>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <controls:SettingsHeaderControl Grid.Row="0" Icon="&#xE71D;" Text="Background Tasks"/>
+                <StackPanel Margin="10, 0, 10, 10" Grid.Row="1">
+                    <controls:SeperatorControl Text="Push general:"/>
+                    <ToggleSwitch x:Name="disablePush_tgls" Header="Disable push:" Margin="0, 10, 0, 0" Toggled="disablePush_tgls_Toggled" IsEnabled="False"/>
+
+                    <controls:SeperatorControl Text="Push channel:"/>
+                    <TextBox x:Name="pushChannelUrl_tbx" PlaceholderText="-" Header="Push channel URL:" Margin="0, 10, 0, 0" IsReadOnly="True"/>
+                    <TextBox x:Name="pushChannelExpirationDate_tbx" PlaceholderText="-" Header="Push channel expiration date:" Margin="0, 10, 0, 0" IsReadOnly="True"/>
+                    <Button x:Name="requestPushChannel_btn" Margin="0, 10, 0, 0" Click="requestPushChannel_btn_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Request new push channel"  VerticalAlignment="Center"/>
+                            <ProgressRing x:Name="requestPushChannel_prgr" Visibility="Collapsed" IsActive="False" Margin="10, 0, 0, 0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <controls:SeperatorControl Text="Push server:"/>
+                    <TextBox x:Name="pushServer_tbx" Margin="0, 10, 0, 0" PlaceholderText="e.g. push.uwpx.org" Header="Push server address:"/>
+                    <ComboBox x:Name="account_cbx"
+                          Margin="0, 10, 0, 0"
+                          HorizontalAlignment="Stretch"
+                          Header="Select account:"
+                          ItemsSource="{x:Bind accounts}"
+                          PlaceholderText="No accounts found!"
+                          DataContextChanged="account_cbx_DataContextChanged"/>
+                    <Button x:Name="sendToPushServer_btn" Margin="0, 10, 0, 0" Click="sendToPushServer_btn_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Send to push server"  VerticalAlignment="Center"/>
+                            <ProgressRing x:Name="sendToPushServer_prgr" Visibility="Collapsed" IsActive="False" Margin="10, 0, 0, 0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <TextBox x:Name="serverCert_tbx" Margin="0, 10, 0, 0" TextWrapping="Wrap" Header="Server certificate:" IsReadOnly="True" PlaceholderText="-"/>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <controls1:InAppNotification Grid.Row="0" x:Name="info_notif"/>
+    </Grid>
 </Page>

@@ -1,5 +1,7 @@
 ﻿using Data_Manager2.Classes;
 using System.Threading.Tasks;
+using Windows.Networking.PushNotifications;
+using XMPP_API.Classes;
 
 namespace Push_App_Server.Classes
 {
@@ -33,6 +35,19 @@ namespace Push_App_Server.Classes
         public static void init()
         {
             //ConnectionHandler.INSTANCE.ClientConnected += INSTANCE_ClientConnected;
+        }
+
+        public static async Task<DataWriter> connectAndSendChannelAsync(XMPPClient client)
+        {
+            DataWriter dW = new DataWriter(client);
+            await dW.connectAndSendAsync();
+            return dW;
+        }
+
+        public static async Task<PushNotificationChannel> requestPushChannelAsync()
+        {
+            DataWriter dw = new DataWriter(null);
+            return await dw.requestChannelAsync();
         }
 
         #endregion

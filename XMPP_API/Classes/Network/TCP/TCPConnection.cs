@@ -72,6 +72,11 @@ namespace XMPP_API.Classes.Network.TCP
         /// <returns>A string containing certificate details.</returns>
         public string getCertificateInformation(Certificate serverCert, IReadOnlyList<Certificate> intermediateCertificates)
         {
+            if(serverCert == null)
+            {
+                return null;
+            }
+
             StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.AppendLine("\tFriendly Name: " + serverCert.FriendlyName);
