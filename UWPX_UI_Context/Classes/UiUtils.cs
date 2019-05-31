@@ -181,6 +181,17 @@ namespace UWPX_UI_Context.Classes
             return GetVirtualKeyState(key) != CoreVirtualKeyStates.None;
         }
 
+        public static ScrollViewer GetScrollViewer(ListView listView)
+        {
+            DependencyObject border = VisualTreeHelper.GetChild(listView, 0);
+            if (border is null)
+            {
+                return null;
+            }
+            DependencyObject scrollViewer = VisualTreeHelper.GetChild(border, 0);
+            return scrollViewer is ScrollViewer scroll ? scroll : null;
+        }
+
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--

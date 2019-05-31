@@ -1,7 +1,11 @@
-﻿using UWPX_UI_Context.Classes.DataContext.Controls;
+﻿using System;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
+using UWPX_UI_Context.Classes.DataContext.Controls;
 using UWPX_UI_Context.Classes.DataTemplates;
+using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace UWPX_UI.Controls.Chat
 {
@@ -25,12 +29,15 @@ namespace UWPX_UI.Controls.Chat
 
         public readonly ChatMessageListControlContext VIEW_MODEL = new ChatMessageListControlContext();
 
+        private ScrollViewer messagesScrollViewer = null;
+
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
         public ChatMessageListControl()
         {
             InitializeComponent();
+            RegisterPointerWheelChanged();
         }
 
         #endregion
@@ -51,6 +58,27 @@ namespace UWPX_UI.Controls.Chat
             ChatDataTemplate oldChat = args.OldValue is ChatDataTemplate ? args.OldValue as ChatDataTemplate : null;
             ChatDataTemplate newChat = args.NewValue is ChatDataTemplate ? args.NewValue as ChatDataTemplate : null;
             VIEW_MODEL.UpdateView(oldChat, newChat);
+        }
+
+        /// <summary>
+        /// https://stackoverflow.com/questions/14534796/isupportincrementalloading-from-bottom-to-top
+        /// </summary>
+        private void RegisterPointerWheelChanged()
+        {
+            DependencyObject borderO = VisualTreeHelper.GetChild(messages_listView, 0);
+            if (borderO is Border border)
+            {
+                /*border.Add
+                DependencyObject scrollViewer = VisualTreeHelper.GetChild(border, 0);
+                if (scrollViewer is ScrollViewer scroll)
+                {
+
+                }*/
+            }
+            if (messagesScrollViewer is null)
+            {
+                throw new InvalidOperationException("ScrollViewer not found.");
+            }
         }
 
         #endregion
@@ -78,5 +106,26 @@ namespace UWPX_UI.Controls.Chat
         }
 
         #endregion
+
+        private double desiredVerticalOffset = 0;
+        private void Messages_listView_PointerWheelChanged(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            messagesScrollViewer = VisualTree.FindDescendant<ScrollViewer>(messages_listView);
+            PointerPoint mousePosition = e.GetCurrentPoint(sender as UIElement);
+            int delta = mousePosition.Properties.MouseWheelDelta;
+
+            // calculate desiredOffset
+            desiredVerticalOffset += delta;
+
+            // limit desiredOffset.
+            desiredVerticalOffset = desiredVerticalOffset < 0 ? 0 : desiredVerticalOffset;
+            desiredVerticalOffset = desiredVerticalOffset > messagesScrollViewer.ScrollableHeight ? messagesScrollViewer.ScrollableHeight : desiredVerticalOffset;
+
+            if (delta < 0 || delta > 0)
+            {
+                messagesScrollViewer.ChangeView(null, desiredVerticalOffset, null, false);
+                e.Handled = true;
+            }
+        }
     }
 }

@@ -39,10 +39,30 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ListView Grid.Row="2"
+        <ListView x:Name="messages_listView"
+                  Grid.Row="2"
                   ItemTemplateSelector="{StaticResource SpeechBubbleDataTemplateSelector}"
                   ItemsSource="{x:Bind VIEW_MODEL.MODEL.CHAT_MESSAGES_INC}"
+                  PointerWheelChanged="Messages_listView_PointerWheelChanged"
                   SelectionMode="None">
+            <ListView.Template>
+                <ControlTemplate>
+                    <Border Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ScrollViewer x:Name="ScrollViewer"
+                                      RenderTransformOrigin="0.5,0.5"
+                                      ZoomMode="Disabled">
+                            <ScrollViewer.RenderTransform>
+                                <CompositeTransform Rotation="180"
+                                                    ScaleX="-1"/>
+                            </ScrollViewer.RenderTransform>
+                            <ItemsPresenter x:Name="ItemsPresenter"/>
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </ListView.Template>
             <ListView.Header>
                 <controls:ScrollHeader Mode="Fade"
                                        Visibility="{x:Bind VIEW_MODEL.MODEL.IsLoading, Mode=OneWay, Converter={StaticResource BoolVisibilityValueConverter}}">
@@ -68,14 +88,21 @@
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsStackPanel Grid.ColumnSpan="1"
-                                     VerticalAlignment="Bottom"
-                                     ItemsUpdatingScrollMode="KeepLastItemInView"/>
+                                     VerticalAlignment="Top"
+                                     ItemsUpdatingScrollMode="KeepScrollOffset"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="Padding" Value="10,5,10,5"/>
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <CompositeTransform Rotation="180"
+                                                ScaleX="-1"/>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
