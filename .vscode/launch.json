@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "asa",
+            "request": "launch",
+            "name": "Local Input Run",
+            "localRunType": "LocalOnly",
+            "script": "${workspaceFolder}/<ASAScript>.asaql"
+        },
+        {
+            "type": "asa",
+            "request": "launch",
+            "name": "Live Input Run",
+            "localRunType": "LiveOnly",
+            "script": "${workspaceFolder}/<ASAScript>.asaql"
+        }
+    ]
+}
